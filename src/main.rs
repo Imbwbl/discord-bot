@@ -2,12 +2,8 @@ mod commands;
 mod events;
 
 use poise::serenity_prelude as serenity;
-use serenity::all::ChannelId;
-use std::sync::atomic::AtomicU32;
 
-struct Data {
-    poise_mentions: AtomicU32,
-}
+struct Data {}
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
@@ -27,9 +23,7 @@ async fn main() {
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-                Ok(Data {
-                    poise_mentions: AtomicU32::new(0),
-                })
+                Ok(Data {})
             })
         })
         .build();

@@ -1,17 +1,14 @@
-use crate::{Context, Data, Error};
+use crate::{Data, Error};
 use poise::serenity_prelude::ChannelId;
-use poise::{serenity_prelude as serenity, CreateReply};
-use serenity::all::{Channel, ChannelType, CreateMessage, Mentionable, PermissionOverwrite, PermissionOverwriteType, Permissions, RoleId};
+use poise::serenity_prelude as serenity;
+use serenity::all::{ChannelType, CreateMessage, Mentionable, PermissionOverwrite, PermissionOverwriteType, Permissions};
 use serenity::builder::CreateChannel;
-
-use ChannelType::Voice;
-use serenity::all::FullEvent::CategoryCreate;
 
 pub async fn event_handler(
     ctx: &serenity::Context,
     event: &serenity::FullEvent,
     _framework: poise::FrameworkContext<'_, Data, Error>,
-    data: &Data,
+    _data: &Data,
 ) -> Result<(), Error> {
     match event {
         serenity::FullEvent::Ready { data_about_bot, .. } => {
@@ -32,7 +29,7 @@ pub async fn event_handler(
         serenity::FullEvent::VoiceStateUpdate { old, new } => {
 
             // User joins a voice channel
-            let category_id = ChannelId::new(1289636827304820868);
+                let category_id = ChannelId::new(1289636827304820868);
             let trigger_channel_id = ChannelId::new(1289587528432615527);
 
             if let Some(new_channel_id) = new.channel_id {
@@ -66,7 +63,7 @@ pub async fn event_handler(
                     let channel = left_channel_id.to_channel(ctx).await?;
                     if let serenity::Channel::Guild(channel) = channel {
                         if channel.kind == ChannelType::Voice || channel.kind == ChannelType::Stage {
-                            if channel.parent_id == Some(ChannelId::new(1289636827304820868)) {
+                            if channel.parent_id == Some(category_id) {
                                 let members = channel.members(ctx);
                                 if members?.is_empty() {
                                     channel.id.delete(ctx).await?;
